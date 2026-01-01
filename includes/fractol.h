@@ -6,7 +6,7 @@
 /*   By: demane <emanedanielakim@gmail.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/01 14:21:34 by demane            #+#    #+#             */
-/*   Updated: 2026/01/01 18:41:23 by demane           ###   ########.fr       */
+/*   Updated: 2026/01/01 19:15:19 by demane           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,5 +34,6 @@ typedef struct s_mlx
 }	t_mlx;
 
 void	ft_init(t_mlx *mlx, t_img *img);
+void	ft_put_pixel(t_img *img, int x, int y, int color);
 
 #endif
