@@ -1,0 +1,236 @@
+🗺️ 1️⃣ ROADMAP FRactol (ordre intelligent)
+
+
+🔹 ÉTAPE 1 — Fenêtre + pixel (sans fractale)
+
+
+🎯 Objectif : afficher un pixel à l’écran.
+
+    Init MLX
+
+    Créer une fenêtre
+
+    Créer une image
+
+    Mettre un pixel à (x, y)
+
+
+👉 Tant que ça marche pas → on ne continue pas
+
+🔹 ÉTAPE 2 — Coordonnées écran → plan complexe
+
+
+🎯 Objectif : comprendre où on regarde.
+
+
+L’écran :
+
+(0,0) ------------> x
+  |
+  |
+  v y
+
+Le monde des fractales :
+
+(-2, 2i) --------> (2, 2i)
+   |
+   |
+(-2,-2i) ------> (2,-2i)
+
+👉 Chaque pixel correspond à un point mathématique.
+
+🔹 ÉTAPE 3 — Mandelbrot (no couleurs)
+
+
+🎯 Objectif : afficher Mandelbrot en noir et blanc.
+
+    Pour chaque pixel :
+
+        calculer c
+
+        lancer la boucle d’itérations
+
+        si ça diverge → blanc
+
+        sinon → noir
+
+
+👉 Là, t’as déjà la fractale 😎
+
+🔹 ÉTAPE 4 — Couleurs propres
+
+
+🎯 Objectif : dégradés fluides.
+
+    La couleur dépend :
+
+        du nombre d’itérations
+
+    Plus ça met du temps à diverger → plus c’est joli
+
+🔹 ÉTAPE 5 — Zoom + déplacement
+
+
+🎯 Objectif : naviguer dans l’infini.
+
+    Zoom centré souris
+
+    Pan avec flèches
+
+    Ajuster l’échelle
+
+🔹 ÉTAPE 6 — Julia
+
+
+🎯 Objectif : réutiliser Mandelbrot.
+
+    Même code
+
+    Seule différence : c est fixe
+
+    Souris = bonus
+
+🔹 ÉTAPE 7 — Bonus fractales
+
+
+🎯 Objectif : impressionner.
+
+    Burning Ship
+
+    Tricorn
+
+    Palettes
+
+    Reset
+
+🧱 2️⃣ STRUCTURE DE PROJET (VALIDÉE 42)
+
+
+Simple, lisible, maintenable.
+
+fractol/
+├── Makefile
+├── fractol.h
+├── main.c
+│
+├── mlx/
+│   ├── mlx_init.c
+│   ├── mlx_draw.c
+│
+├── fractals/
+│   ├── mandelbrot.c
+│   ├── julia.c
+│   ├── burning_ship.c
+│
+├── math/
+│   ├── complex.c
+│   ├── mapping.c
+│
+├── events/
+│   ├── key_events.c
+│   ├── mouse_events.c
+│
+├── render/
+│   ├── render.c
+│   ├── color.c
+│
+└── utils/
+    ├── errors.c
+    └── ft_atof.c
+
+💡 Astuce :
+
+➡️ UNE fractale = UNE fonction
+
+🧠 3️⃣ LES MATHS (SANS SE FAIRE MAL)
+
+
+🔢 C’est quoi un nombre complexe ?
+
+
+Un nombre complexe = un point.
+
+z = a + bi
+
+    a → axe horizontal (x)
+
+    b → axe vertical (y)
+
+
+👉 Rien de magique.
+
+🔁 La formule magique (Mandelbrot)
+
+z₀ = 0
+zₙ₊₁ = zₙ² + c
+
+👉 Traduction humaine :
+
+    Tu pars de 0
+
+    Tu fais une opération
+
+    Tu recommences
+
+    Tu regardes si ça explose 💥
+
+🧪 C’est quoi “ça explose” ?
+
+
+Si :
+
+|z| > 2
+
+Alors → ça diverge
+
+👉 On arrête la boucle.
+
+🧮 Calcul de z² (sans magie)
+
+
+Si :
+
+z = x + yi
+
+Alors :
+
+z² = (x² - y²) + 2xyi
+
+💡 Pas besoin de maths avancées.
+
+🖼️ Pixel → monde fractal
+
+c.re = min_x + (x / width) * (max_x - min_x);
+c.im = max_y - (y / height) * (max_y - min_y);
+
+👉 C’est juste une règle de trois.
+
+🎨 Couleurs (simple mais beau)
+
+color = iteration * 0x0000FF;
+
+Puis tu amélioreras.
+
+🧩 Julia (différence minuscule)
+
+Mandelbrot
+
+
+Julia
+
+c = pixel
+
+
+c = constant
+
+z = 0
+
+
+z = pixel
+
+🔥 C’est littéralement tout.
+
+🧠 Phrase clé à retenir
+
+
+    Fractol, c’est une boucle, des pixels, et un zoom.

@@ -1,0 +1,515 @@
+````markdown
+# MiniLibX – Bibliothèque graphique simple pour étudiants
+
+MiniLibX (ou **mlx**) est une bibliothèque permettant de créer des logiciels graphiques simples sans connaissance approfondie de X-Window.
+Elle fournit des fonctions pour créer des fenêtres, dessiner des pixels ou des chaînes de caractères, manipuler des images et gérer les événements clavier/souris.
+
+> Cette documentation couvre principalement **la version 3 (v3)**. Les différences avec **la version 1 (v1)** sont indiquées.
+
+---
+
+## 1. Concepts X-Window
+
+X-Window est un système graphique orienté réseau pour Unix.
+Deux entités principales :
+
+1. **Le logiciel** : souhaite dessiner à l’écran et recevoir les entrées clavier/souris.
+2. **Le serveur X (X-Server)** : gère l’écran, le clavier et la souris.
+
+Pour communiquer, il faut une **connexion réseau** entre le logiciel et le serveur pour :
+
+- envoyer des ordres de dessin (logiciel → serveur)
+- recevoir des événements clavier/souris (serveur → logiciel)
+
+---
+
+## 2. Initialisation de MiniLibX
+
+```c
+#include <mlx.h>
+
+void *mlx_ptr = mlx_init();
+````
+
+* `mlx_init()` initialise la connexion avec le serveur X.
+* Retour : un pointeur `void*` utilisé pour toutes les autres fonctions MiniLibX.
+* Si la connexion échoue : retourne `NULL`.
+
+**Différence v1 → v3** :
+
+* v1 : initialisation basique, fonctionne mais avec moins de stabilité.
+* v3 : stable, compatible avec multiples fenêtres et systèmes modernes.
+
+---
+
+## 3. Gestion des fenêtres
+
+### 3.1 Création
+
+```c
+void *win_ptr = mlx_new_window(mlx_ptr, largeur, hauteur, "Titre");
+```
+
+* Crée une fenêtre de taille `largeur x hauteur` avec le titre spécifié.
+* Retour : pointeur `void*` de la fenêtre (NULL si erreur).
+* Peut créer plusieurs fenêtres indépendantes.
+
+### 3.2 Nettoyage / destruction
+
+```c
+mlx_clear_window(mlx_ptr, win_ptr);   // Efface la fenêtre (fond noir)
+mlx_destroy_window(mlx_ptr, win_ptr); // Détruit la fenêtre
+```
+
+**Différence v1 → v3** :
+
+* v3 gère correctement plusieurs fenêtres simultanément.
+* v1 : support plus limité des fenêtres multiples.
+
+---
+
+## 4. Dessin dans la fenêtre
+
+### 4.1 Pixel
+
+```c
+mlx_pixel_put(mlx_ptr, win_ptr, x, y, couleur);
+```
+
+* Dessine un pixel aux coordonnées `(x,y)` dans la fenêtre.
+* `couleur` est un entier RGB codé sur 24 bits (R,G,B).
+
+**Encodage couleur :**
+
+| Octet  | 31..24 | 23..16 | 15..8 | 7..0 |
+| ------ | ------ | ------ | ----- | ---- |
+| Valeur | unused | R      | G     | B    |
+
+* Octet bleu (B) : toujours le moins significatif.
+* Attention aux différences d’**endian** selon la machine.
+
+### 4.2 Texte
+
+```c
+mlx_string_put(mlx_ptr, win_ptr, x, y, couleur, "texte");
+```
+
+* Affiche une chaîne de caractères dans la fenêtre aux coordonnées `(x,y)`.
+
+---
+
+## 5. Gestion des images
+
+### 5.1 Création et destruction
+
+```c
+void *img_ptr = mlx_new_image(mlx_ptr, largeur, hauteur);
+mlx_destroy_image(mlx_ptr, img_ptr);
+```
+
+* Crée une image en mémoire (`img_ptr`).
+* Détruit l’image quand elle n’est plus utilisée.
+
+### 5.2 Accès aux pixels
+
+```c
+char *addr = mlx_get_data_addr(img_ptr, &bpp, &size_line, &endian);
+```
+
+* `bpp` : bits par pixel
+
+* `size_line` : nombre d’octets par ligne
+
+* `endian` : 0 = little, 1 = big
+
+* `addr` : pointeur vers la mémoire de l’image pour dessiner directement.
+
+### 5.3 Affichage
+
+```c
+mlx_put_image_to_window(mlx_ptr, win_ptr, img_ptr, x, y);
+```
+
+* Affiche l’image à la position `(x,y)` dans la fenêtre.
+
+### 5.4 Couleurs
+
+```c
+unsigned int color = mlx_get_color_value(mlx_ptr, couleur_rgb);
+```
+
+* Convertit une couleur RGB standard en valeur adaptée à l’affichage (endian & profondeur de l’écran).
+
+### 5.5 XPM
+
+```c
+void *img1 = mlx_xpm_to_image(mlx_ptr, xpm_data, &w, &h);
+void *img2 = mlx_xpm_file_to_image(mlx_ptr, "fichier.xpm", &w, &h);
+```
+
+* Charge une image XPM depuis un tableau de données ou un fichier.
+* MiniLibX gère la transparence mais pas tous les types XPM.
+
+**Différence v1 → v3** :
+
+* v3 : meilleure compatibilité XPM et gestion endian.
+* v1 : limitations avec XPM complexes.
+
+---
+
+## 6. Gestion des événements
+
+### 6.1 Boucle principale
+
+```c
+mlx_loop(mlx_ptr);
+```
+
+* Boucle infinie qui attend les événements clavier, souris ou expose.
+* Appelle les fonctions associées à ces événements.
+
+### 6.2 Fonctions de hook
+
+```c
+mlx_key_hook(win_ptr, fonction, param);
+mlx_mouse_hook(win_ptr, fonction, param);
+mlx_expose_hook(win_ptr, fonction, param);
+mlx_loop_hook(mlx_ptr, fonction, param); // appelé quand pas d'événement
+```
+
+* `fonction` : fonction appelée lors de l’événement
+* `param` : pointeur vers des données utilisateur
+
+**Exemple paramètres pour les hooks :**
+
+```c
+void key_hook(int keycode, void *param);
+void mouse_hook(int button, int x, int y, void *param);
+void expose_hook(void *param);
+void loop_hook(void *param);
+```
+
+* `keycode` : touche pressée
+* `(x,y)` : coordonnées de la souris
+* `button` : bouton de la souris
+
+### 6.3 Hook générique
+
+```c
+mlx_hook(win_ptr, event, mask, fonction, param);
+```
+
+* Permet d’accéder à tous les événements X-Window de manière plus fine.
+* `event` et `mask` : valeurs X11 définies dans `X.h`.
+
+**Différence v1 → v3** :
+
+* v3 : `mlx_loop_hook()` et meilleure gestion multi-fenêtres.
+* v1 : uniquement `key`, `mouse` et `expose`.
+
+---
+
+## 7. Compilation et linkage
+
+```bash
+gcc mon_programme.c -lmlx -lXext -lX11 -o mon_programme
+```
+
+* Inclure les bibliothèques : `mlx`, `Xext`, `X11`.
+* Utiliser `-L` si les bibliothèques sont dans un chemin non standard.
+
+---
+
+## 8. Résumé des principales fonctions
+
+| Fonction                    | Description                          | Retour          |
+| --------------------------- | ------------------------------------ | --------------- |
+| `mlx_init()`                | Initialise la connexion au serveur X | `void*` ou NULL |
+| `mlx_new_window()`          | Crée une fenêtre                     | `void*` ou NULL |
+| `mlx_destroy_window()`      | Détruit une fenêtre                  | rien            |
+| `mlx_clear_window()`        | Efface une fenêtre                   | rien            |
+| `mlx_pixel_put()`           | Dessine un pixel                     | rien            |
+| `mlx_string_put()`          | Affiche du texte                     | rien            |
+| `mlx_new_image()`           | Crée une image                       | `void*` ou NULL |
+| `mlx_destroy_image()`       | Détruit une image                    | rien            |
+| `mlx_get_data_addr()`       | Accès mémoire image                  | `char*`         |
+| `mlx_put_image_to_window()` | Affiche l’image dans une fenêtre     | rien            |
+| `mlx_get_color_value()`     | Convertit couleur RGB                | `unsigned int`  |
+| `mlx_xpm_to_image()`        | Crée une image depuis XPM            | `void*` ou NULL |
+| `mlx_xpm_file_to_image()`   | Crée une image depuis un fichier XPM | `void*` ou NULL |
+| `mlx_loop()`                | Boucle d’événements                  | jamais          |
+| `mlx_key_hook()`            | Hook clavier                         | 0 si OK         |
+| `mlx_mouse_hook()`          | Hook souris                          | 0 si OK         |
+| `mlx_expose_hook()`         | Hook expose                          | 0 si OK         |
+| `mlx_loop_hook()`           | Hook boucle libre                    | 0 si OK         |
+| `mlx_hook()`                | Hook générique                       | 0 si OK         |
+
+---
+
+**Notes importantes :**
+
+* Toutes les coordonnées commencent en `(0,0)` en haut à gauche.
+* Impossible de dessiner hors de la fenêtre sélectionnée.
+* Les fonctions v3 améliorent la compatibilité multi-fenêtres et XPM par rapport à v1.
+
+Parfait ! Voici la version **complète en Markdown**, avec un **tableau comparatif v1 vs v3** pour chaque fonction et fonctionnalité, prête à copier/coller :
+
+````markdown
+# MiniLibX – Bibliothèque graphique simple pour étudiants
+
+MiniLibX (ou **mlx**) est une bibliothèque permettant de créer des logiciels graphiques simples sans connaissance approfondie de X-Window.
+Elle fournit des fonctions pour créer des fenêtres, dessiner des pixels ou des chaînes de caractères, manipuler des images et gérer les événements clavier/souris.
+
+> Cette documentation couvre principalement **la version 3 (v3)**. Les différences avec **la version 1 (v1)** sont indiquées dans les tableaux comparatifs.
+
+---
+
+## 1. Concepts X-Window
+
+X-Window est un système graphique orienté réseau pour Unix.
+Deux entités principales :
+
+1. **Le logiciel** : souhaite dessiner à l’écran et recevoir les entrées clavier/souris.
+2. **Le serveur X (X-Server)** : gère l’écran, le clavier et la souris.
+
+Pour communiquer, il faut une **connexion réseau** entre le logiciel et le serveur pour :
+
+- envoyer des ordres de dessin (logiciel → serveur)
+- recevoir des événements clavier/souris (serveur → logiciel)
+
+---
+
+## 2. Initialisation de MiniLibX
+
+```c
+#include <mlx.h>
+
+void *mlx_ptr = mlx_init();
+````
+
+* `mlx_init()` initialise la connexion avec le serveur X.
+* Retour : un pointeur `void*` utilisé pour toutes les autres fonctions MiniLibX.
+* Si la connexion échoue : retourne `NULL`.
+
+**Comparatif v1 vs v3 :**
+
+| Fonction     | v1                     | v3                                                                 |
+| ------------ | ---------------------- | ------------------------------------------------------------------ |
+| `mlx_init()` | Initialisation basique | Stable, compatible multi-fenêtres, meilleure compatibilité moderne |
+
+---
+
+## 3. Gestion des fenêtres
+
+### 3.1 Création
+
+```c
+void *win_ptr = mlx_new_window(mlx_ptr, largeur, hauteur, "Titre");
+```
+
+### 3.2 Nettoyage / destruction
+
+```c
+mlx_clear_window(mlx_ptr, win_ptr);
+mlx_destroy_window(mlx_ptr, win_ptr);
+```
+
+**Comparatif v1 vs v3 :**
+
+| Fonction               | v1                                         | v3                                   |
+| ---------------------- | ------------------------------------------ | ------------------------------------ |
+| `mlx_new_window()`     | Création simple, limitation multi-fenêtres | Support multiple fenêtres            |
+| `mlx_clear_window()`   | Efface fenêtre                             | Même mais plus fiable multi-fenêtres |
+| `mlx_destroy_window()` | Détruit fenêtre                            | Même mais plus fiable multi-fenêtres |
+
+---
+
+## 4. Dessin dans la fenêtre
+
+### 4.1 Pixel
+
+```c
+mlx_pixel_put(mlx_ptr, win_ptr, x, y, couleur);
+```
+
+### 4.2 Texte
+
+```c
+mlx_string_put(mlx_ptr, win_ptr, x, y, couleur, "texte");
+```
+
+**Encodage couleur :**
+
+| Octet  | 31..24 | 23..16 | 15..8 | 7..0 |
+| ------ | ------ | ------ | ----- | ---- |
+| Valeur | unused | R      | G     | B    |
+
+* Octet bleu (B) : toujours le moins significatif
+* Attention aux différences d’**endian** selon la machine.
+
+**Comparatif v1 vs v3 :**
+
+| Fonction           | v1            | v3                               |
+| ------------------ | ------------- | -------------------------------- |
+| `mlx_pixel_put()`  | Dessin simple | Même, plus fiable multi-fenêtres |
+| `mlx_string_put()` | Texte simple  | Même, plus fiable multi-fenêtres |
+
+---
+
+## 5. Gestion des images
+
+### 5.1 Création et destruction
+
+```c
+void *img_ptr = mlx_new_image(mlx_ptr, largeur, hauteur);
+mlx_destroy_image(mlx_ptr, img_ptr);
+```
+
+### 5.2 Accès aux pixels
+
+```c
+char *addr = mlx_get_data_addr(img_ptr, &bpp, &size_line, &endian);
+```
+
+* `bpp` : bits par pixel
+* `size_line` : nombre d’octets par ligne
+* `endian` : 0 = little, 1 = big
+* `addr` : pointeur vers la mémoire de l’image pour dessiner directement.
+
+### 5.3 Affichage
+
+```c
+mlx_put_image_to_window(mlx_ptr, win_ptr, img_ptr, x, y);
+```
+
+### 5.4 Couleurs
+
+```c
+unsigned int color = mlx_get_color_value(mlx_ptr, couleur_rgb);
+```
+
+* Convertit une couleur RGB standard en valeur adaptée à l’affichage (endian & profondeur de l’écran).
+
+### 5.5 XPM
+
+```c
+void *img1 = mlx_xpm_to_image(mlx_ptr, xpm_data, &w, &h);
+void *img2 = mlx_xpm_file_to_image(mlx_ptr, "fichier.xpm", &w, &h);
+```
+
+* Charge une image XPM depuis un tableau de données ou un fichier.
+* Gère la transparence mais pas tous les types XPM.
+
+**Comparatif v1 vs v3 :**
+
+| Fonction                    | v1                        | v3                                     |
+| --------------------------- | ------------------------- | -------------------------------------- |
+| `mlx_new_image()`           | Crée image simple         | Même, plus fiable                      |
+| `mlx_destroy_image()`       | Détruit image             | Même, plus fiable                      |
+| `mlx_get_data_addr()`       | Accès mémoire image       | Même, gestion endian plus robuste      |
+| `mlx_put_image_to_window()` | Affiche image             | Même                                   |
+| `mlx_get_color_value()`     | Convertit couleur         | Même, meilleure compatibilité          |
+| `mlx_xpm_to_image()`        | XPM limité                | Support amélioré et transparence gérée |
+| `mlx_xpm_file_to_image()`   | XPM depuis fichier limité | Support amélioré, transparence gérée   |
+
+---
+
+## 6. Gestion des événements
+
+### 6.1 Boucle principale
+
+```c
+mlx_loop(mlx_ptr);
+```
+
+* Boucle infinie qui attend les événements clavier, souris ou expose.
+* Appelle les fonctions associées à ces événements.
+
+### 6.2 Fonctions de hook
+
+```c
+mlx_key_hook(win_ptr, fonction, param);
+mlx_mouse_hook(win_ptr, fonction, param);
+mlx_expose_hook(win_ptr, fonction, param);
+mlx_loop_hook(mlx_ptr, fonction, param); // appelé quand pas d'événement
+```
+
+**Exemple paramètres pour les hooks :**
+
+```c
+void key_hook(int keycode, void *param);
+void mouse_hook(int button, int x, int y, void *param);
+void expose_hook(void *param);
+void loop_hook(void *param);
+```
+
+* `keycode` : touche pressée
+* `(x,y)` : coordonnées de la souris
+* `button` : bouton de la souris
+
+### 6.3 Hook générique
+
+```c
+mlx_hook(win_ptr, event, mask, fonction, param);
+```
+
+* Permet d’accéder à tous les événements X-Window de manière plus fine.
+* `event` et `mask` : valeurs X11 définies dans `X.h`.
+
+**Comparatif v1 vs v3 :**
+
+| Fonction            | v1                    | v3                                         |
+| ------------------- | --------------------- | ------------------------------------------ |
+| `mlx_loop()`        | Boucle infinie simple | Même mais meilleure gestion multi-fenêtres |
+| `mlx_key_hook()`    | Clavier               | Même                                       |
+| `mlx_mouse_hook()`  | Souris                | Même                                       |
+| `mlx_expose_hook()` | Expose                | Même                                       |
+| `mlx_loop_hook()`   | Non présent           | Présent, appelé quand pas d’événement      |
+| `mlx_hook()`        | Non présent           | Présent, accès générique aux événements    |
+
+---
+
+## 7. Compilation et linkage
+
+```bash
+gcc mon_programme.c -lmlx -lXext -lX11 -o mon_programme
+```
+
+* Inclure les bibliothèques : `mlx`, `Xext`, `X11`.
+* Utiliser `-L` si les bibliothèques sont dans un chemin non standard.
+
+---
+
+## 8. Résumé des principales fonctions
+
+| Fonction                    | Description             | Retour          | v1       | v3                         |
+| --------------------------- | ----------------------- | --------------- | -------- | -------------------------- |
+| `mlx_init()`                | Initialise la connexion | `void*` ou NULL | ✔        | ✔ stable multi-fenêtres    |
+| `mlx_new_window()`          | Crée une fenêtre        | `void*` ou NULL | ✔        | ✔ multi-fenêtres           |
+| `mlx_destroy_window()`      | Détruit une fenêtre     | rien            | ✔        | ✔                          |
+| `mlx_clear_window()`        | Efface une fenêtre      | rien            | ✔        | ✔                          |
+| `mlx_pixel_put()`           | Dessine un pixel        | rien            | ✔        | ✔                          |
+| `mlx_string_put()`          | Affiche du texte        | rien            | ✔        | ✔                          |
+| `mlx_new_image()`           | Crée une image          | `void*` ou NULL | ✔        | ✔                          |
+| `mlx_destroy_image()`       | Détruit une image       | rien            | ✔        | ✔                          |
+| `mlx_get_data_addr()`       | Accès mémoire image     | `char*`         | ✔        | ✔ gestion endian améliorée |
+| `mlx_put_image_to_window()` | Affiche image           | rien            | ✔        | ✔                          |
+| `mlx_get_color_value()`     | Convertit couleur RGB   | `unsigned int`  | ✔        | ✔                          |
+| `mlx_xpm_to_image()`        | XPM depuis tableau      | `void*` ou NULL | ✔ limité | ✔ amélioré                 |
+| `mlx_xpm_file_to_image()`   | XPM depuis fichier      | `void*` ou NULL | ✔ limité | ✔ amélioré                 |
+| `mlx_loop()`                | Boucle d’événements     | jamais          | ✔        | ✔ multi-fenêtres           |
+| `mlx_key_hook()`            | Hook clavier            | 0 si OK         | ✔        | ✔                          |
+| `mlx_mouse_hook()`          | Hook souris             | 0 si OK         | ✔        | ✔                          |
+| `mlx_expose_hook()`         | Hook expose             | 0 si OK         | ✔        | ✔                          |
+| `mlx_loop_hook()`           | Hook boucle libre       | 0 si OK         | ✘        | ✔                          |
+| `mlx_hook()`                | Hook générique          | 0 si OK         | ✘        | ✔                          |
+
+---
+
+**Notes importantes :**
+
+* Toutes les coordonnées commencent en `(0,0)` en haut à gauche.
+* Impossible de dessiner hors de la fenêtre sélectionnée.
+* Les fonctions v3 améliorent la compatibilité multi-fenêtres, XPM et endian par rapport à v1.
+
+
