@@ -6,15 +6,15 @@
 #    By: demane <emanedanielakim@gmail.com>         +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/01/01 17:17:02 by demane            #+#    #+#              #
-#    Updated: 2026/01/01 18:03:57 by demane           ###   ########.fr        #
+#    Updated: 2026/01/04 22:09:49 by demane           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = fractol
 
 SRCS = events/key_events.c events/mouse_events.c fractals/burning_ship.c fractals/julia.c \
-	 fractals/mandelbrot.c math/complex.c math/mapping.c mlx/mlx_draw.c mlx/mlx_init.c  \
-	 render/color.c render/render.c utils/errors.c utils/ft_atof.c main.c
+	 fractals/mandelbrot.c math/complex.c math/mapping.c mlx/mlx_draw.c math/math_utils.c\
+	  mlx/mlx_init.c render/color.c render/render.c render/zoom.c render/move.c render/reset.c utils/errors.c utils/ft_atod.c main.c
 
 LIBFT_DIR = libft
 
