@@ -6,7 +6,7 @@
 /*   By: demane <emanedanielakim@gmail.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/04 21:41:43 by demane            #+#    #+#             */
-/*   Updated: 2026/01/04 21:57:02 by demane           ###   ########.fr       */
+/*   Updated: 2026/01/05 15:13:55 by demane           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,6 @@ void	ft_move_down(t_mlx *mlx)
 	mlx->view.min_im -= step;
 	ft_render_fractal(mlx);
 }
-
 
 void	ft_move_left(t_mlx *mlx)
 {

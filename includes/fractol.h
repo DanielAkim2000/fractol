@@ -6,7 +6,7 @@
 /*   By: demane <emanedanielakim@gmail.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/01 14:21:34 by demane            #+#    #+#             */
-/*   Updated: 2026/01/04 22:09:14 by demane           ###   ########.fr       */
+/*   Updated: 2026/01/05 17:29:23 by demane           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ typedef struct s_pixel
 
 typedef struct s_palet
 {
-	int	*colors;
+	int	colors[20];
 	int	nb_colors;
 }	t_palet;
 
@@ -66,6 +66,7 @@ typedef struct s_mlx
 	char		*name_fractal;
 	t_complex	julia_cnst;
 	int			max_iteration;
+	int			loop;
 }	t_mlx;
 
 
@@ -90,10 +91,14 @@ t_complex	ft_convert_screen_to_complex(t_pixel *pixel, t_mlx *mlx);
 double		ft_calculation_iteration_mandelbrot(t_complex c, int max_iteration);
 void		ft_render_fractal(t_mlx *mlx);
 int			ft_get_color(double it, int max, t_palet *palet);
-void		ft_assgin_palet_colors(t_palet *palet);
+void		ft_change_colors(t_mlx *mlx, int index_colors);
+void		ft_assign_palet_colors(t_mlx *mlx, t_palet *palet_pre);
 void		ft_zoom_at(t_mlx *mlx, int x, int y, float zoom_val);
 int			ft_mouse_hook(int button, int x, int y, void *param);
 int			ft_key_hook(int keycode, void *param);
+void		ft_free_all_mlx(t_mlx *mlx);
+int			ft_exit_mlx(void *params);
+void		ft_destroy_all(t_mlx *mlx);
 double		ft_calculation_iteration_julia(t_complex complex, t_complex c, \
 	int max_iteration);
 double		ft_calculation_iteration_burning_ship(t_complex c, \

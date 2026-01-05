@@ -6,7 +6,7 @@
 /*   By: demane <emanedanielakim@gmail.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/05 15:07:16 by demane            #+#    #+#             */
-/*   Updated: 2026/01/04 01:27:30 by demane           ###   ########.fr       */
+/*   Updated: 2026/01/05 15:13:01 by demane           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,6 @@ void	*ft_calloc(size_t elementCount, size_t elementSize)
 	total_size = elementCount * elementSize;
 	if (elementSize && total_size / elementSize != elementCount)
 		return (NULL);
-	// if (total_size < 0)
-	// 	total_size = 1;
 	ptr = malloc(total_size);
 	if (!ptr)
 		return (NULL);
