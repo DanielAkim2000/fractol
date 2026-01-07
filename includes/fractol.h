@@ -6,7 +6,7 @@
 /*   By: demane <emanedanielakim@gmail.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/01 14:21:34 by demane            #+#    #+#             */
-/*   Updated: 2026/01/05 17:29:23 by demane           ###   ########.fr       */
+/*   Updated: 2026/01/05 21:22:42 by demane           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,6 +99,7 @@ int			ft_key_hook(int keycode, void *param);
 void		ft_free_all_mlx(t_mlx *mlx);
 int			ft_exit_mlx(void *params);
 void		ft_destroy_all(t_mlx *mlx);
+void		ft_print_params_accepted(void);
 double		ft_calculation_iteration_julia(t_complex complex, t_complex c, \
 	int max_iteration);
 double		ft_calculation_iteration_burning_ship(t_complex c, \

@@ -6,7 +6,7 @@
 /*   By: demane <emanedanielakim@gmail.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 5026/01/03 21:56:26 by demane            #+#    #+#             */
-/*   Updated: 2026/01/04 15:58:47 by demane           ###   ########.fr       */
+/*   Updated: 2026/01/05 23:12:23 by demane           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ double	ft_calculation_iteration_mandelbrot(t_complex c, int max_iteration)
 	i = 0;
 	z.im = 0;
 	z.re = 0;
-	while (i < max_iteration && (ft_abs_complex(z) <= 4))
+	while (i < max_iteration && (ft_abs_complex(z) <= 2))
 	{
 		z = ft_zn_carre(z, c);
 		i++;

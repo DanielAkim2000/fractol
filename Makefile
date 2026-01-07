@@ -6,7 +6,7 @@
 #    By: demane <emanedanielakim@gmail.com>         +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/01/01 17:17:02 by demane            #+#    #+#              #
-#    Updated: 2026/01/05 18:16:02 by demane           ###   ########.fr        #
+#    Updated: 2026/01/05 23:09:51 by demane           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,8 +14,8 @@ NAME = fractol
 
 SRCS = events/key_events.c events/mouse_events.c fractals/burning_ship.c fractals/julia.c \
 	fractals/mandelbrot.c math/complex.c math/mapping.c mlx/mlx_draw.c math/math_utils.c\
-	mlx/mlx_init.c render/color.c render/render.c render/zoom.c render/move.c render/reset.c \
-	utils/ft_atod.c utils/free.c utils/exit.c mlx/mlx_destroy.c main.c
+	mlx/mlx_init.c mlx/mlx_destroy.c render/color.c render/render.c render/zoom.c render/move.c render/reset.c \
+	utils/ft_atod.c utils/free.c utils/exit.c utils/print_params_accepted.c main.c
 
 LIBFT_DIR = libft
 
@@ -39,7 +39,7 @@ $(NAME):$(OBJS) $(LIBFT) $(MLX)
 	$(CC) $(CFLAGS) $(INCLUDES) $(OBJS) $(MLX) $(LIBFT)  -lX11 -lXext -lm -lbsd -o $(NAME)
 
 %.o:%.c
-	$(CC) $(FLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) -c $< -o $@
 
 $(LIBFT):
 	$(MAKE) --directory=$(LIBFT_DIR)

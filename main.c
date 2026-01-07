@@ -6,7 +6,7 @@
 /*   By: demane <emanedanielakim@gmail.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/01 14:56:19 by demane            #+#    #+#             */
-/*   Updated: 2026/01/05 16:28:20 by demane           ###   ########.fr       */
+/*   Updated: 2026/01/05 22:58:10 by demane           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,26 +15,26 @@
 void	ft_verif(int ac, char **av)
 {
 	if (ac < 2)
-		exit(1);
+		ft_print_params_accepted();
 	if (ft_strncmp(av[1], "mandelbrot", ft_strlen(av[1])) == 0)
 	{
 		if (ac != 2)
-			exit (1);
+			ft_print_params_accepted();
 		return ((void)0);
 	}
 	if (ft_strncmp(av[1], "julia", ft_strlen(av[1])) == 0)
 	{
 		if (ac != 4)
-			exit (1);
+			ft_print_params_accepted();
 		return ((void)0);
 	}
 	if (ft_strncmp(av[1], "burning_ship", ft_strlen(av[1])) == 0)
 	{
 		if (ac != 2)
-			exit(1);
+			ft_print_params_accepted();
 		return ((void)0);
 	}
-	exit(1);
+	ft_print_params_accepted();
 }
 
 int	main(int ac, char **av)

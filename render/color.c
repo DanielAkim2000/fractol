@@ -6,7 +6,7 @@
 /*   By: demane <emanedanielakim@gmail.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/03 23:41:10 by demane            #+#    #+#             */
-/*   Updated: 2026/01/05 17:36:20 by demane           ###   ########.fr       */
+/*   Updated: 2026/01/05 23:10:16 by demane           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,6 @@ void	ft_change_colors(t_mlx *mlx, int index_colors)
 void	ft_assign_palet_colors(t_mlx *mlx, t_palet *palet_pre)
 {
 	int	i;
-	int	*tab;
 
 	i = -1;
 	while (++i < palet_pre->nb_colors)
