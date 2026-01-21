@@ -6,7 +6,7 @@
 /*   By: demane <emanedanielakim@gmail.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/01 14:56:19 by demane            #+#    #+#             */
-/*   Updated: 2026/01/21 14:09:43 by demane           ###   ########.fr       */
+/*   Updated: 2026/01/21 14:14:18 by demane           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ int	main(int ac, char **av)
 	t_mlx	mlx;
 
 	ft_verif(ac, av);
-	ft_init_fractol(&mlx, 800, 600, av);
+	ft_init_fractol(&mlx, 1000, 800, av);
 	ft_render_fractal(&mlx);
 	mlx_mouse_hook(mlx.win, ft_mouse_hook, &mlx);
 	mlx_key_hook(mlx.win, ft_key_hook, &mlx);
