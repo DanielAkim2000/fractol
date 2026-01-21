@@ -6,7 +6,7 @@
 /*   By: demane <emanedanielakim@gmail.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/01 14:56:19 by demane            #+#    #+#             */
-/*   Updated: 2026/01/21 12:40:56 by demane           ###   ########.fr       */
+/*   Updated: 2026/01/21 14:09:43 by demane           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	ft_init_fn_j_a(int *i, int *nbr_number, int *nbr_point, int *is_zero)
 {
-	*i = -1;
+	*i = 0;
 	*nbr_number = 0;
 	*nbr_point = 0;
 	*is_zero = 1;
@@ -22,9 +22,9 @@ void	ft_init_fn_j_a(int *i, int *nbr_number, int *nbr_point, int *is_zero)
 
 void	ft_skip_minus_or_space(int *i, char *double_str)
 {
-	while (double_str[*i] == ' ')
+	while (double_str[*i] && double_str[*i] == ' ')
 		(*i)++;
-	if (double_str[*i] == '-')
+	if (double_str[*i] && double_str[*i] == '-')
 		(*i)++;
 }
 
@@ -37,14 +37,14 @@ int	ft_is_julia_accepted(char *double_str)
 
 	ft_init_fn_j_a(&i, &nbr_number, &nbr_point, &is_zero);
 	ft_skip_minus_or_space(&i, double_str);
-	while (double_str[++i] != '\0')
+	while (double_str[i] != '\0')
 	{
 		if (!ft_isdigit(double_str[i]) && double_str[i] != '.')
 			return (0);
 		if (ft_isdigit(double_str[i]) && double_str[i] != '0'
 			&& double_str[i] != '.')
 			is_zero = 0;
-		if (double_str[i] == '.')
+		if (double_str[i++] == '.')
 			nbr_point++;
 		else
 			nbr_number++;
