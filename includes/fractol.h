@@ -6,7 +6,7 @@
 /*   By: demane <emanedanielakim@gmail.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/01 14:21:34 by demane            #+#    #+#             */
-/*   Updated: 2026/01/05 21:22:42 by demane           ###   ########.fr       */
+/*   Updated: 2026/01/21 14:00:57 by demane           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,6 @@ typedef struct s_mlx
 	int			max_iteration;
 	int			loop;
 }	t_mlx;
-
 
 double		ft_abs(double d);
 double		ft_carre(double d);

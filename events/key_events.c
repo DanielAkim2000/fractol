@@ -6,7 +6,7 @@
 /*   By: demane <emanedanielakim@gmail.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/04 02:16:56 by demane            #+#    #+#             */
-/*   Updated: 2026/01/05 18:09:15 by demane           ###   ########.fr       */
+/*   Updated: 2026/01/21 12:44:32 by demane           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,13 +27,13 @@ int	ft_key_hook(int keycode, void *param)
 		ft_change_colors(mlx, 1);
 	else if (keycode == 110)
 		ft_change_colors(mlx, 0);
-	else if (keycode == 119)
+	else if (keycode == 65362)
 		ft_move_up(mlx);
-	else if (keycode == 115)
+	else if (keycode == 65364)
 		ft_move_down(mlx);
-	else if (keycode == 97)
+	else if (keycode == 65361)
 		ft_move_left(mlx);
-	else if (keycode == 100)
+	else if (keycode == 65363)
 		ft_move_right(mlx);
 	else if (keycode == 114)
 		ft_reset_view(mlx);

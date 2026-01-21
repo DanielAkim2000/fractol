@@ -6,7 +6,7 @@
 /*   By: demane <emanedanielakim@gmail.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/04 15:10:23 by demane            #+#    #+#             */
-/*   Updated: 2026/01/04 16:00:32 by demane           ###   ########.fr       */
+/*   Updated: 2026/01/21 12:48:58 by demane           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,8 @@ static t_complex	ft_zn_carre(t_complex z, t_complex c)
 	});
 }
 
-double	ft_calculation_iteration_julia(t_complex complex, t_complex c, int max_iteration)
+double	ft_calculation_iteration_julia(t_complex complex, t_complex c,
+		int max_iteration)
 {
 	int			i;
 	t_complex	z;

@@ -6,7 +6,7 @@
 #    By: demane <emanedanielakim@gmail.com>         +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/01/01 17:17:02 by demane            #+#    #+#              #
-#    Updated: 2026/01/05 23:09:51 by demane           ###   ########.fr        #
+#    Updated: 2026/01/21 11:57:16 by demane           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,7 +28,7 @@ MLX = $(MLX_DIR)/libmlx_Linux.a
 OBJS = $(SRCS:.c=.o)
 
 MAKE= make
-RM = rm
+RM = rm -rf
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
 INCLUDES = -I./includes
