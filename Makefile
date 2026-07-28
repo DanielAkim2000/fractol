@@ -6,7 +6,7 @@
 #    By: demane <emanedanielakim@gmail.com>         +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/01/01 17:17:02 by demane            #+#    #+#              #
-#    Updated: 2026/01/21 11:57:16 by demane           ###   ########.fr        #
+#    Updated: 2026/03/01 05:03:22 by demane           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -36,7 +36,7 @@ INCLUDES = -I./includes
 all: $(NAME)
 
 $(NAME):$(OBJS) $(LIBFT) $(MLX)
-	$(CC) $(CFLAGS) $(INCLUDES) $(OBJS) $(MLX) $(LIBFT)  -lX11 -lXext -lm -lbsd -o $(NAME)
+	$(CC) $(CFLAGS) $(INCLUDES) $(OBJS) $(MLX) $(LIBFT)  -lX11 -lXext -lm -o $(NAME)
 
 %.o:%.c
 	$(CC) $(CFLAGS) -c $< -o $@
